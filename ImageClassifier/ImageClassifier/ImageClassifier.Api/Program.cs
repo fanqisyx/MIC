@@ -20,6 +20,7 @@ builder.Services.AddCors(options =>
 using ImageClassifier.Api.Services; // Add this using
 builder.Services.AddSingleton<CategoryService>();
 builder.Services.AddSingleton<ClassificationService>(); // Register ClassificationService
+builder.Services.AddScoped<ImageClassifier.Api.Services.LatexReportService>(); // Register LatexReportService
 
 // Ensure Controllers are used
 builder.Services.AddControllers();
