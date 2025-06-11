@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="../buildMultiTargeting/ImageClassifier.Api.props" />
+</Project>

@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "3JsZj9CuXsnrXv9VNaE8Jg/65dMOUxZSgnDy2RbFoAs=",
+  "Source": "ImageClassifier.Api",
+  "BasePath": "_content/ImageClassifier.Api",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
