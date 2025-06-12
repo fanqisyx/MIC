@@ -43,7 +43,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onUploadSuccess }) => {
 
         try {
             // Adjust the URL to where your backend API is running
-            const response = await fetch('http://localhost:5000/api/images/upload', { // Ensure this port matches your .NET API's port
+            const response = await fetch('/api/images/upload', { // Ensure this port matches your .NET API's port
                 method: 'POST',
                 body: formData,
                 // Headers are not typically needed for FormData with fetch,

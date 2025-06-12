@@ -7,6 +7,7 @@ import ThumbnailStrip from './components/ThumbnailStrip';
 import CurrentImageDisplay from './components/CurrentImageDisplay';
 import CategoryButtons from './components/CategoryButtons';
 import StatisticsDisplay from './components/StatisticsDisplay';
+import ReportGenerator from './components/ReportGenerator';
 
 interface UploadedFile {
   fileName: string;
@@ -27,7 +28,7 @@ interface Category { // Define or import this
   name: string;
 }
 
-const API_CATEGORIES_URL = 'http://localhost:5000/api/categories';
+const API_CATEGORIES_URL = '/api/categories';
 
 function App() {
   const [uploadedImages, setUploadedImages] = useState<UploadedFile[]>([]);
@@ -79,7 +80,7 @@ function App() {
       }
 
       try {
-          const response = await fetch('http://localhost:5000/api/classifications', {
+          const response = await fetch('/api/classifications', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
@@ -136,7 +137,7 @@ function App() {
           if (uploadedImages.length === 0) return; // No images to classify
 
           try {
-              const response = await fetch('http://localhost:5000/api/classifications');
+              const response = await fetch('/api/classifications');
               if (!response.ok) {
                   console.error('Failed to fetch all classifications during merge');
                   // Optionally, handle this error more gracefully in the UI
@@ -239,12 +240,12 @@ function App() {
         <div className="flex-1 flex flex-col overflow-hidden">
           {/* Top: Thumbnail Strip */}
           <div className="shrink-0"> {/* Prevent this from shrinking too much */}
-            <ThumbnailStrip images={uploadedImages} onSelectImage={handleSelectImage} />
+            <ThumbnailStrip images={uploadedImages} categories={categories} selectedImage={selectedImage} onSelectImage={handleSelectImage} />
           </div>
 
           {/* Middle: Current Image Display */}
           <div className="flex-1 bg-gray-300 overflow-hidden"> {/* Allow this to take remaining space and handle overflow if image is too big */}
-            <CurrentImageDisplay image={selectedImage} />
+            <CurrentImageDisplay image={selectedImage} categories={categories} />
           </div>
 
           {/* Bottom: Category Buttons */}
@@ -254,9 +255,11 @@ function App() {
         </div>
 
         {/* Right: Statistics Display */}
-        <aside className="w-[300px] shrink-0 border-l border-gray-300 bg-gray-50 overflow-y-auto">
+        <aside className="w-[300px] shrink-0 border-l border-gray-300 bg-gray-50 overflow-y-auto p-4 space-y-4">
                 {/* Pass the new comprehensive 'stats' object */}
                 <StatisticsDisplay stats={stats} />
+                <hr /> {/* Optional separator */}
+                <ReportGenerator />
         </aside>
       </div>
     </div>

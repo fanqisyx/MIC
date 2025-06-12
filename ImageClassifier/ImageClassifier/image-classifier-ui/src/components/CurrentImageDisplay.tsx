@@ -38,7 +38,7 @@ const CurrentImageDisplay: React.FC<CurrentImageDisplayProps> = ({ image, catego
     <div className="h-full min-h-[400px] bg-gray-700 flex flex-col items-center justify-center p-4 overflow-hidden">
       <div className="flex-grow flex items-center justify-center max-h-[calc(100%-50px)] w-full"> {/* Container for image to control size */}
         <img
-          src={`http://localhost:5000/Uploads/${image.fileName}`}
+          src={`/Uploads/${image.fileName}`}
           alt={image.fileName}
           className="max-w-full max-h-full object-contain shadow-lg"
         />

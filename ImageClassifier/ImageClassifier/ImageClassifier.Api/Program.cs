@@ -42,51 +42,50 @@ app.UseStaticFiles(new StaticFileOptions
     RequestPath = "/Uploads" // This makes files accessible via http://localhost:xxxx/Uploads/filename.jpg
 });
 
+// Serve React static files from image-classifier-ui/build
+var reactAppBuildPath = Path.GetFullPath(Path.Combine(builder.Environment.ContentRootPath, "../../image-classifier-ui/build"));
+if (Directory.Exists(reactAppBuildPath)) // Only configure if the build path exists
+{
+    // Serve default file (index.html) from the React build folder
+    app.UseDefaultFiles(new DefaultFilesOptions
+    {
+        FileProvider = new PhysicalFileProvider(reactAppBuildPath),
+        RequestPath = "" // Important: Serve index.html for the root path
+    });
+
+    // Serve static files (js, css, images) from the React build folder
+    app.UseStaticFiles(new StaticFileOptions
+    {
+        FileProvider = new PhysicalFileProvider(reactAppBuildPath),
+        RequestPath = "" // Serve these files from the root
+    });
+}
+
 // Configure the HTTP request pipeline.
+app.UseHttpsRedirection(); // Should be early.
+
+// CORS policy should be applied before endpoints that need it.
 if (app.Environment.IsDevelopment())
 {
+    app.UseCors("AllowReactApp"); // Apply CORS policy in development
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+// In production, CORS might be handled by the hosting environment (e.g., Azure App Service, Nginx)
+// or a more restrictive policy could be applied here.
 
-app.UseHttpsRedirection();
 
-// Apply CORS policy before mapping controllers and other endpoints
-app.UseCors("AllowReactApp");
-
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast")
-.WithOpenApi();
+// app.UseAuthentication(); // If you had authentication
+// app.UseAuthorization(); // If you had authorization
 
 // Map controller routes
 app.MapControllers();
 
-// Apply CORS policy - re-applying here or ensuring it's before UseEndpoints/MapControllers if not before UseStaticFiles for API calls.
-// The current placement of UseCors is after UseStaticFiles. This is usually fine for <img> tags.
-// If API calls from JS to /Uploads were a thing and needed CORS, this might be an issue.
-// For now, the existing placement is likely fine.
-// app.UseCors("AllowReactApp"); // Removed duplicate
-
+// SPA Fallback: If the React app build path exists, map fallback to its index.html.
+// This ensures that client-side routes are handled by the React app.
+if (Directory.Exists(reactAppBuildPath)) // Check again, or rely on the check above
+{
+    app.MapFallbackToFile("index.html"); // This will serve index.html from the path configured in UseDefaultFiles/UseStaticFiles if path is ""
+}
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}

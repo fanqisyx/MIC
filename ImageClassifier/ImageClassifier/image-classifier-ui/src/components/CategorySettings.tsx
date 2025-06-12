@@ -6,7 +6,7 @@ interface Category {
   name: string;
 }
 
-const API_URL = 'http://localhost:5000/api/categories'; // Adjust port if needed
+const API_URL = '/api/categories'; // Adjust port if needed
 
 const CategorySettings: React.FC = () => {
     const [categories, setCategories] = useState<Category[]>([]);

@@ -46,7 +46,7 @@ const ThumbnailStrip: React.FC<ThumbnailStripProps> = ({ images, categories, sel
               title={image.fileName}
             >
               <img
-                src={`http://localhost:5000/Uploads/${image.fileName}`}
+                src={`/Uploads/${image.fileName}`}
                 alt={image.fileName}
                 className="w-full h-full object-cover"
               />
